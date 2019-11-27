@@ -45,9 +45,6 @@ ral <- read_csv("data/Ral17_3.csv")
 ral_long <- ral %>% 
   gather(peptide, concentration, -replicate, -diet)
 #view(ral_long)
-ggplot(ral_long, aes(x=peptide, y = concentration, colour = diet)) +
-  geom_point(size = 0.6)
-
 
 ggplot(ral_long, aes(x=peptide, y = concentration, colour = diet)) +
   geom_point(size = 0.6) +
@@ -61,7 +58,7 @@ from the `kableExtra` package.
 
 
 **Tables**
-```{r #sample table for html markdown. Filter by replicate 1 to display a replicate of each treatment in the html output}
+```{r #sample table for html markdown. Filter by replicate 1 to provide a sample of each treatment tested in this work}
 Rep1<-filter(ral_long, replicate == 1)
 
 ```
@@ -96,7 +93,7 @@ ral_final<-subset(ral_final, Accession!="RRtr")
 #Obtain general protein expression derived from accession numbers
 
 ral_final_by_accession <-group_by(ral_final, Accession, Diet)
-#view(ral_final_by_accession) #not doing anything
+#view(ral_final_by_accession) 
 general_protein_expression<-summarise(ral_final_by_accession, mean_Concentration = mean(Concentration))
 #view(general_protein_expression)
 ggplot(general_protein_expression, aes(x=Accession, y = mean_Concentration, colour = Diet)) +
@@ -105,20 +102,56 @@ ggplot(general_protein_expression, aes(x=Accession, y = mean_Concentration, colo
   scale_color_brewer(palette = "Set1") +
   theme(legend.position = "bottom")
 
-# To identify protein accession add label
-#ggplot(general_protein_expression, aes(x=Accession, y = mean_Concentration, label = Accession, colour = Diet)) +
-  geom_label(size = 2) +
-  scale_y_log10() +
-  scale_color_brewer(palette = "Set1") +
-  theme(legend.position = "bottom")
+# Identify highly expressed proteins
+#ggplot(general_protein_expression, aes(x=Accession, y = mean_Concentration, colour = Diet, label = Accession)) +
+ # geom_point () +
+  #geom_label(size = 2) +
+  #scale_y_log10() +
+  #scale_color_brewer(palette = "Set1") +
+  #theme(legend.position = "bottom")
 
 ```
+# Statistics
+
+```{r **Statistics**}
+ral_fishmeal_novacq <- filter(general_protein_expression, Diet %in% c("Fishmeal","Novacq"))
+
+#view(ral_fishmeal_novacq)
+
+ral_fishmeal_novacq_t <- t.test(mean_Concentration ~ Diet, data = ral_fishmeal_novacq)
+
+ral_fishmeal_novacq_t
+
+ral_krillmeal_novacq <- filter(general_protein_expression, Diet %in% c("Krillmeal","Novacq"))
+
+#view(ral_krillmeal_novacq)
+
+ral_krillmeal_novacq_t <- t.test(mean_Concentration ~ Diet, data = ral_krillmeal_novacq)
+
+ral_krillmeal_novacq_t
+
+#Fasting
+
+ral_fasting_novacq <- filter(general_protein_expression, Diet %in% c("Fasting","Novacq"))
+
+#view(ral_fasting_novacq)
+
+ral_fasting_novacq_t <- t.test(mean_Concentration ~ Diet, data = ral_fasting_novacq)
+
+ral_fasting_novacq_t
+
+
+```
+
+
+
 
 Your figure and table captions are automatically numbered and can be referenced in the text
 if needed: see eg. Table \@ref(tab:mytable) and Figure \@ref(fig:standard-plot)
 
 # My Digital Toolbox
 
+The tool that I have used the most is Tidyverse followed by ggplot2
 What digital tools have you been using in your project? Which ones have you learned since starting 
 Data School?
 
@@ -138,19 +171,14 @@ No prizes for guessing mine:
 
 # My time went ...
 
-What parts of the project took the most time and effort? Were there any surprising challenges you
-encountered, and how did you solve them?
+I spent a significant amount of time understanding the underlying logic of the process of making dataframes "tidy". I was not surprised that Data School would be a challenge but at the same time I was very excited to start learning a coding language. I solved some of my challenges by rewatching the webex recordings and reading at forums in the internet.  
 
 # Next steps
 
-What further steps do you wish your project could take? Or are there any new digital skills that you
-are keen to develop as a result of your involvement in the Data School?
+
+I will focus in mastering R for now but I am sure that I am not going back to excel. I believe that in the future I would like to become a bioinformatician/statistician to complement my current skills. I would like to learn bash, SQL, SAS and python.
 
 # My Data School Experience
 
-This poster is mostly about your synthesis project. However we would also like to hear about other
-parts of your Data School experience. What aspects of the program did you really enjoy? How have you
-been applying the skills you have learned in your daily work? Have you been able to transfer this 
-knowledge to your team members? Concrete examples demonstrating this would be useful here
-(meetings/talks/collaborations/new roles). Any descriptions of the personal impact the program has 
-had are welcome here as well!
+I wish I had attended week 1 at data school. I feel that I missed a lot because everyone seems great. Aside from that my experience in data school has been rich. I have been able to use my newly acquired data school skills in my daily work. A specific example of this has been producing an output (a protein list) that tells me the degree of protein redundancy that I have in my proteomics work. This was a task that would take me between 3-4 hours in excel. Now it takes me 45 seconds. Very embarrasing. Never again. At a personal level, being able to be more efficient with my time makes me feel more at ease and happy with myself.
+
