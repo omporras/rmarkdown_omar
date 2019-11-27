@@ -1,9 +1,9 @@
 ---
-title: A short title that describes your work
+title: Catering for prawns, in pursuit of sustainability in the aquaculture industry
 subtitle: 
-author:  Your Name
-affiliation: CSIRO Business Unit # Or group/team
-photo: resources/img/photo.jpeg
+author:  Omar Mendoza Porras
+affiliation: CSIRO Livestock and Aquaculture # Or group/team
+photo: resources/img/jpprawn.jpg
 
 short_title: Optional short title
 
@@ -26,31 +26,49 @@ library(kableExtra)
 
 
 # Introduction
-Introduce *yourself*. What's your background? Could you code before Data School? What did your 
-daily work pattern look like before Data School? Etc. This section will be placed in 
-an introductory block at the top of the page separate from the rest of the content. Don't change the section title from "Introduction" otherwise this process won't work correctly.
+I am an oceanographer with experience in biotechnology, mass spectrometry and aquaculture. Before Data School I did not code at all and my data crunching consisted of lots of clicking and data sorting in Excel. It was not enjoyable.
+
 
 # My Project
-Rather than yourself, this is the space to introduce your **project**. What are 
-your goals, what was your data, how do you plan to work with it? Perhaps show some example data if 
-it would help.
+The goal of my project(s) is to identify peptide markers derived from proteins that are expressed in different prawn tissues as a result of using different functional diets. Proteomics is used as a main tool. The long term goal is to achieve sustainability in the aquaculture sector throughout the use of diets manufactured from renewable sources.  
 
-In order to build this demo poster correctly, you will also need to have installed the `tidyverse`, 
-`gapminder`, and `kableExtra` packages.
 
 ## Preliminary results
 
 This section will demonstrate the different visuals you might want use to show off your 
 project. Don't feel the need to go overboard, this is supposed to give a taste of the work you are
 doing rather than being a publication ready document.
+```{r importing raw data file followed by producing a long version of it}
+ral <- read_csv("data/Ral17_3.csv")
+#view(ral)
+#make long format
+ral_long <- ral %>% 
+  gather(peptide, concentration, -replicate, -diet)
+#view(ral_long)
+ggplot(ral_long, aes(x=peptide, y = concentration, colour = diet)) +
+  geom_point(size = 0.6)
+
+
+ggplot(ral_long, aes(x=peptide, y = concentration, colour = diet)) +
+  geom_point(size = 0.6) +
+  scale_y_log10()
+```
+
 
 To get tables formatting correctly, use `knitr::kable` to convert the table to html format. If
 you also want to have alternate row highlighting, pass the result to `kable_styling('striped')` 
 from the `kableExtra` package.
 
+
 **Tables**
+```{r #sample table for html markdown. Filter by replicate 1 to display a replicate of each treatment in the html output}
+Rep1<-filter(ral_long, replicate == 1)
+
+```
+
+
 ```{r mytable, out.width='100%', echo = T}
-knitr::kable(head(gapminder, n = 5), format = "html", caption = "A table of data") %>% 
+knitr::kable(head(Rep1, n = 4), format = "html", caption = "Differential protein expression in hepatopancreas of black tiger prawn _Penaeus monodon_ in response to specific feeding formulations") %>% 
   kable_styling("striped")
 ```
 
@@ -58,17 +76,42 @@ knitr::kable(head(gapminder, n = 5), format = "html", caption = "A table of data
 
 ![](resources/img/tidyverse.png){width=100px}
 
+
 **Plots from R**
-```{r standard-plot, out.width='60%', fig.align='center', fig.height= 4, fig.width=6, fig.cap="Yet another gapminder plot"}
-gapminder %>% 
-  filter(year == 1987) %>% 
-  ggplot(aes(x = gdpPercap, y = lifeExp, colour = continent, size = pop)) +
-  geom_point() +
-  scale_x_log10(labels = function(b) format(b, scientific = F)) +
-  scale_size(trans = "sqrt", guide = "none") +
+```{r standard-plot, out.width='60%', fig.align='center', fig.height= 4, fig.width=6, fig.cap="Protein expression in hepatopancreas of prawns fed different diets"}
+#Obtain mean of peptide expression of each peptide sharing same accession number to represent protein expression}
+
+#separate accession number from peptide sequence
+ral_long_separated<- ral_long %>% 
+  separate(peptide, into = c('pept', 'ide'))
+#view(ral_long_separated)
+#rename heading from table
+ral_final<-rename(ral_long_separated, Diet = diet, Replicate = replicate, Peptide = pept, Accession = ide, Concentration = concentration)
+#view(ral_final)
+#remove trypsin and reversed derived peptides
+ral_final<-subset(ral_final, Accession!="TRYP")
+ral_final<-subset(ral_final, Accession!="RRtr")
+#view(ral_final)
+
+#Obtain general protein expression derived from accession numbers
+
+ral_final_by_accession <-group_by(ral_final, Accession, Diet)
+#view(ral_final_by_accession) #not doing anything
+general_protein_expression<-summarise(ral_final_by_accession, mean_Concentration = mean(Concentration))
+#view(general_protein_expression)
+ggplot(general_protein_expression, aes(x=Accession, y = mean_Concentration, colour = Diet)) +
+  geom_point () +
+  scale_y_log10() +
   scale_color_brewer(palette = "Set1") +
-  theme_linedraw() +
   theme(legend.position = "bottom")
+
+# To identify protein accession add label
+#ggplot(general_protein_expression, aes(x=Accession, y = mean_Concentration, label = Accession, colour = Diet)) +
+  geom_label(size = 2) +
+  scale_y_log10() +
+  scale_color_brewer(palette = "Set1") +
+  theme(legend.position = "bottom")
+
 ```
 
 Your figure and table captions are automatically numbered and can be referenced in the text
