@@ -26,7 +26,7 @@ library(kableExtra)
 
 
 # Introduction
-I am an oceanographer with experience in biotechnology, mass spectrometry and aquaculture. Before Data School I did not code at all and my data crunching consisted of lots of clicking and data sorting in Excel. It was not enjoyable.
+I am an oceanographer with experience in biotechnology, mass spectrometry and aquaculture. Before Data School I did not code at all and my data processing consisted of using vendor specific software (expensive licenses) to visualise and process data. I also did lots of clicking and data sorting in Excel. It was not enjoyable.
 
 
 # My Project
@@ -35,9 +35,7 @@ The goal of my project(s) is to identify peptide markers derived from proteins t
 
 ## Preliminary results
 
-This section will demonstrate the different visuals you might want use to show off your 
-project. Don't feel the need to go overboard, this is supposed to give a taste of the work you are
-doing rather than being a publication ready document.
+In this study, 252 protein peptides were measured in prawn hepatopancreas two hours post-feeding. We used Sequential Window Acquisition of all Theoretical mass spectra (SWATH-MS) to detect and identify these protein peptides.   
 ```{r importing raw data file followed by producing a long version of it}
 ral <- read_csv("data/Ral17_3.csv")
 #view(ral)
@@ -52,10 +50,6 @@ ggplot(ral_long, aes(x=peptide, y = concentration, colour = diet)) +
 ```
 
 
-To get tables formatting correctly, use `knitr::kable` to convert the table to html format. If
-you also want to have alternate row highlighting, pass the result to `kable_styling('striped')` 
-from the `kableExtra` package.
-
 
 **Tables**
 ```{r #sample table for html markdown. Filter by replicate 1 to provide a sample of each treatment tested in this work}
@@ -64,14 +58,10 @@ Rep1<-filter(ral_long, replicate == 1)
 ```
 
 
-```{r mytable, out.width='100%', echo = T}
+```{r mytable, out.width='100%'}
 knitr::kable(head(Rep1, n = 4), format = "html", caption = "Differential protein expression in hepatopancreas of black tiger prawn _Penaeus monodon_ in response to specific feeding formulations") %>% 
   kable_styling("striped")
 ```
-
-**Images from a file**
-
-![](resources/img/tidyverse.png){width=100px}
 
 
 **Plots from R**
@@ -146,28 +136,9 @@ ral_fasting_novacq_t
 
 
 
-Your figure and table captions are automatically numbered and can be referenced in the text
-if needed: see eg. Table \@ref(tab:mytable) and Figure \@ref(fig:standard-plot)
-
 # My Digital Toolbox
 
-The tool that I have used the most is Tidyverse followed by ggplot2
-What digital tools have you been using in your project? Which ones have you learned since starting 
-Data School?
-
-You can use all the usual R markdown features in writing a project summary, including lists:
-
-* R - dplyr, ggplot, ...
-* Python
-* SQL
-
-## Favourite tool (optional)
-
-Is there a tool/package/function in particular that you've enjoyed using? Give it a special shout out here.
-
-![](https://raw.githubusercontent.com/tidyverse/ggplot2/master/man/figures/logo.png){.pull-right width=100px}
-
-No prizes for guessing mine:
+The tool that I have used the most  in my projects is Tidyverse. I currenlty use it to generate lists of proteins identified using proteomics and to filter protein redundancy. I am also focusing on learning more about ggplot2
 
 # My time went ...
 
@@ -175,10 +146,9 @@ I spent a significant amount of time understanding the underlying logic of the p
 
 # Next steps
 
-
 I will focus in mastering R for now but I am sure that I am not going back to excel. I believe that in the future I would like to become a bioinformatician/statistician to complement my current skills. I would like to learn bash, SQL, SAS and python.
 
 # My Data School Experience
 
-I wish I had attended week 1 at data school. I feel that I missed a lot because everyone seems great. Aside from that my experience in data school has been rich. I have been able to use my newly acquired data school skills in my daily work. A specific example of this has been producing an output (a protein list) that tells me the degree of protein redundancy that I have in my proteomics work. This was a task that would take me between 3-4 hours in excel. Now it takes me 45 seconds. Very embarrasing. Never again. At a personal level, being able to be more efficient with my time makes me feel more at ease and happy with myself.
+I wish I had attended week 1 at data school to personally meet everyone. Aside from that my experience in data school has been rich. I have been able to use my newly acquired data school skills in my daily work. A specific example of this has been producing an output (a protein list) that tells me the degree of protein redundancy that I have in my proteomics work. This was a task that would take me between 3-4 hours in excel. Now it takes me 45 seconds. Very embarrasing. Never again. At a personal level, being able to be more efficient with my time makes me feel more at ease and happy.
 
